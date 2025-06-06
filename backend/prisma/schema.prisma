@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  username    String @id
+  password    String @db.Char(128)
+  nome        String @db.Char(128)
+  tipo        String @db.Char(1) // 0 = Administrador, 1 = Usuário
+  status      String @db.Char(1) // A = Ativo, I = Inativo, B = Bloqueado
+  quantAcesso Int @map("Quant_Acesso") @default(0)
+
+  @@map("Usuarios") // mapear para o nome Usuarios
+}

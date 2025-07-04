@@ -15,12 +15,24 @@ datasource db {
 }
 
 model Usuario {
-  username    String @id
-  password    String @db.Char(128)
-  nome        String @db.Char(128)
-  tipo        String @db.Char(1) // 0 = Administrador, 1 = Usuário
-  status      String @db.Char(1) // A = Ativo, I = Inativo, B = Bloqueado
+  username    String @id @db.VarChar(128)
+  password    String @db.VarChar(128)
+  nome        String @db.VarChar(128)
+  tipo        String @db.VarChar(1) // 0 = Administrador, 1 = Usuário
+  status      String @db.VarChar(1) // A = Ativo, I = Inativo, B = Bloqueado
   quantAcesso Int @map("Quant_Acesso") @default(0)
-
+  tarefas     Tarefa[]
   @@map("Usuarios") // mapear para o nome Usuarios
+}
+
+model Tarefa {
+  id          Int      @id @default(autoincrement())
+  titulo      String   @db.VarChar(128)
+  descricao   String   @db.Text
+  dataCriacao DateTime @default(now())
+  dataConclusao DateTime?
+  prioridade   String    @default("Normal") @db.VarChar(20) // Ex: Baixa, Normal, Alta, Urgente
+  usuario     Usuario? @relation(fields: [username], references: [username])
+  username    String?  @db.VarChar(128)
+  @@map("tarefas") // mapear para o nome Tarefas
 }

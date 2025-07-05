@@ -59,48 +59,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const register = async (req: Request, res: Response) => {
-  try {
-    const { username, password, nome } = req.body;
-
-    if (!username || !password || !nome) {
-      return res.status(400).json({
-        message: "Todos os campos são obrigatórios: Username, Password, Nome.",
-      });
-    }
-
-    const existingUser = await prisma.usuario.findUnique({
-      where: { username },
-    });
-
-    if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "Este nome de usuário já está em uso." });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await prisma.usuario.create({
-      data: {
-        username,
-        password: hashedPassword,
-        nome,
-        tipo: "1",
-        status: "A",
-      },
-    });
-
-    res.status(201).json({
-      message: "Usuário registrado com sucesso!",
-      user: { Username: newUser.username, Nome: newUser.nome },
-    });
-  } catch (error) {
-    console.error("Erro no registro:", error);
-    res.status(500).json({ message: "Erro interno no servidor." });
-  }
-};
-
 export const changePassword = async (req: Request, res: Response) => {
   const { username, oldPassword, newPassword } = req.body;
 

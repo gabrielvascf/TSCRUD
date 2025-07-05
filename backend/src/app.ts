@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import authRoutes from "./routes/authRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
+import taskRoutes from "./routes/taskRoutes";
 import userRoutes from "./routes/userRoutes";
-import taskRoutes from "./routes/taskRoutes"
 dotenv.config();
 
 const app = express();
@@ -18,7 +19,9 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use("/api/auth", authRoutes);
-app.use('/api/tasks', taskRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/users", userRoutes);
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });

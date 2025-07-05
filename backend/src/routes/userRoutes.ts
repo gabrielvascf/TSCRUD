@@ -1,16 +1,18 @@
 import { Router } from "express";
 import {
-  login,
-  register,
-  changePassword,
-  recoverPassword,
-} from "../controllers/authController";
+  listUsers,
+  createUser,
+  updateUserStatus,
+} from "../controllers/userController";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { adminMiddleware } from "../middleware/adminMiddleware";
 
 const router = Router();
-router.post("/login", login);
-router.post("/register", register);
-router.post("/change-password", authMiddleware, changePassword);
-router.post("/recover-password", recoverPassword);
+
+router.use(authMiddleware, adminMiddleware);
+
+router.get("/", listUsers);
+router.post("/", createUser);
+router.put("/:username/status", updateUserStatus);
 
 export default router;

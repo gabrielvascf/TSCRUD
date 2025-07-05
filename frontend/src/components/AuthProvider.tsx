@@ -13,7 +13,6 @@ import api from "@/services/api";
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string, nome: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -48,24 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (username: string, password: string, nome: string) => {
-    try {
-      await api.post("/auth/register", {
-        username: username,
-        password: password,
-        nome: nome,
-      });
-      alert("Cadastro realizado com sucesso! Por favor, faça o login.");
-      // Opcional: redirecionar para o login ou fazer login automático
-      router.push("/login");
-    } catch (error) {
-      console.error("Falha no cadastro:", error);
-      // @ts-ignore
-      const message = error.response?.data?.message || "Erro desconhecido ao cadastrar.";
-      alert(`Falha no cadastro: ${message}`);
-    }
-  };
-
   const logout = () => {
     localStorage.removeItem("authToken");
     setIsAuthenticated(false);
@@ -77,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
